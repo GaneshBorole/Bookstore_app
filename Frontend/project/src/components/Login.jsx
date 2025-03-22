@@ -2,6 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { toast } from "react-hot-toast";
+//import { set } from "mongoose";
+// import { set } from "mongoose";
 function Login() {
   const {
     register,
@@ -18,15 +21,19 @@ function Login() {
     .then((res)=>{
       console.log(res.data)
       if(res.data){
-        alert("login successfully")
+        toast.success('Login Successfully');
+        document.getElementById("my_modal_3").close();
+        setTimeout(() => {
+          window.location.reload();
+          localStorage.setItem("Users", JSON.stringify(res.data.user));
+        }, 1000);
       }
-      localStorage.setItem("Users",JSON.stringify(res.data.user));
-
     }).catch((err)=>{
       if(err.response){
         console.log(err);
         
-        alert(err.response.data.message)
+        toast.error("Error :"+err.response.data.message);
+        setTimeout(()=>{},3000)
       }
     });
   };
@@ -40,6 +47,7 @@ function Login() {
             <Link
               to="/"
               className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              onClick={()=>document.getElementById('my_modal_3').close()} 
             >
               ✕
             </Link>
